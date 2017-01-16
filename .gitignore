@@ -1,0 +1,56 @@
+import requests
+from bs4 import BeautifulSoup
+import webbrowser
+import time
+
+linklist = []
+hrefs = []
+itemnames = []
+hrefprices = []
+itemprices = []
+
+spreadsheet = {
+
+}
+
+i = -1
+
+pricesurl = "http://backpack.tf/spreadsheet"
+
+pr = requests.get(pricesurl)
+pr.encoding = 'utf-8'
+soup = BeautifulSoup(pr.content, 'lxml')
+links = soup.findAll('a', attrs={'class': 'qlink'})
+qualities = soup.findAll('td', {'href': '/stats/Unique'})
+for thing in qualities:
+    for link in links:
+        if link in thing: #remember to grab prices
+            print(link)
+            i += 1
+            check = (links[i]['href'])
+            if "Non-Tradable" not in check:
+                hrefprices.append(link.text)
+for i in range(0,len(links)):
+    one =(links[i]['href'])
+    hrefs.append(str(one))
+    print(i)
+for item in hrefs:
+    if "Non-Tradable" not in item:
+        if "Strange" not in item:
+            if "Haunted" not in item:
+                if "Vintage" not in item:
+                    if "Genuine" not in item:
+                        if "Collector" not in item:
+                            itemname = str(item).replace('/stats/Unique/', "").replace('%20', " ").replace("/Tradable/Craftable", "").replace('/Tradable/Non-Craftable', ""
+                            ).replace('%27', "'").replace('/stats/', "").replace('Genuine/', 'Genuine ').replace('Strange/', 'Strange ').replace('Haunted/', 'Haunted ')
+                            if "Non-Craftable" in str(item):
+                                itemname += ' (Non-Craftable)'
+                                itemnames.append(itemname)
+                            else:
+                                itemnames.append(itemname)
+
+for price in hrefprices:
+    newprice = ' '.join(str(price).split())
+    #print(newprice)
+    itemprices.append(newprice)
+print(qualities)
